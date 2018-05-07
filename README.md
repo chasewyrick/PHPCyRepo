@@ -9,7 +9,8 @@ The code is awful and I know it.
 * Linux
 * Apache (or nginx, see: http://flightphp.com/install/)
 * composer
-* tar, ar, bzip2, gzip commands
+* tar, ar, bzip2, gzip
+* MySQL
 * PHP 7
 
 ## How to install:
