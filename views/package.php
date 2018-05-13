@@ -25,7 +25,7 @@
         <div>
           <h2>Depiction</h2>
           <form action="<?php echo $repo['url']; ?>admin/package/<?php echo $package['Package']; ?>/updateDepiction" method="POST">
-          <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['token']; ?>" />
+          <?php Form::csrf(); ?>
           <textarea rows=15 cols=40 name="depiction"><?php if (!empty($package['Depiction'])) {
             echo $package['Depiction'];
           } else {
@@ -38,7 +38,7 @@
           <h2>Delete</h2>
           <b>WARNING! This is not reversible!</b>
           <form action="<?php echo $repo['url']; ?>admin/package/<?php echo $package['Package']; ?>/delete" method="POST">
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['token']; ?>" />
+            <?php Form::csrf(); ?>
             <input type="submit" value="Delete">
           </form>
         </div>

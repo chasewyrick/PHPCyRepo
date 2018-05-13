@@ -5,7 +5,7 @@
     <div class="main">
       <h2>Upload</h2>
       <form action="<?php echo $repo['url']; ?>admin/upload" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['token']; ?>" />
+        <?php Form::csrf(); ?>
         <input type="file" name="file" />
         <input type="submit" />
       </form>
@@ -19,8 +19,8 @@
         <br>
       <?php } ?>
       <h2>Change password</h2>
-      <form action="<?php echo $repo['url']; ?>admin/password" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['token']; ?>" />
+      <form action="<?php echo $repo['url']; ?>admin/password" method="post">
+        <?php Form::csrf(); ?>
         <input type="password" name="password" />
         <input type="submit" />
       </form>
