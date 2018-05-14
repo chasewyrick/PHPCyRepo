@@ -1,10 +1,14 @@
 <?php
 class Auth {
   public static function authenticate($user) {
-    $_SESSION['auth'] = $user['auth'];
-    $_SESSION['username'] = $user['username'];
-    $_SESSION['id'] = $user['id'];
+    $_SESSION['auth'] = $user->auth;
+    $_SESSION['username'] = $user->username;
+    $_SESSION['id'] = $user->id;
     $_SESSION['token'] = bin2hex(random_bytes(32));
+  }
+
+  public static function getUser() {
+    return User::get('id', $_SESSION['id']);
   }
 
   public static function deauthenticate() {
@@ -20,6 +24,10 @@ class Auth {
   }
 
   public static function isSuperuser() {
-    return true;
+    return $_SESSION['auth']==1;
+  }
+
+  public static function mayOwnPackages() {
+    return $_SESSION['auth']<10 && $_SESSION['auth']>0;
   }
 }

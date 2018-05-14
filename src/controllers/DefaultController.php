@@ -10,19 +10,16 @@ class DefaultController {
       unset($_SESSION['error']);
     }
   
-    $q = Flight::db()->prepare('SELECT * FROM packages;');
-    $q->execute();
-    $rows = $q->fetchAll();
-  
-    Flight::render('admin.php', ['repo' => Flight::get('config')['repo'], 'packages' => $rows]);
+    Flight::render('admin.php', ['repo' => Flight::get('config')['repo'], 'packages' => Package::all()]);
   }
 
   public static function changePassword() {
     Utils::checkCsrfToken();
-  
-    $q = Flight::db()->prepare('UPDATE users SET password=? WHERE id=?;');
-    $q->execute([password_hash($_POST['password'], PASSWORD_DEFAULT), $_SESSION['id']]);
-  
+
+    $user = Auth::getUser();
+    $user->password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $user->save();
+
     Flight::redirect('/admin');
   }
 }

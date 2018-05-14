@@ -13,8 +13,8 @@
       <a href="<?php echo $repo['url']; ?>admin/regen">Regen Packages</a>
       <h2>Packages</h2>
       <?php foreach ($packages as $package) { ?>
-        <a href="<?php echo $repo['url']; ?>admin/package/<?php echo $package['Package']; ?>">
-          <?php echo $package['Package']; ?> - <?php echo $package['Name']; ?> - <?php echo $package['Version']; ?>
+        <a href="<?php echo $repo['url']; ?>admin/package/<?php echo $package->Package; ?>">
+          <?php echo $package->Package; ?> - <?php echo $package->Name; ?> - <?php echo $package->Version; ?>
         </a>
         <br>
       <?php } ?>

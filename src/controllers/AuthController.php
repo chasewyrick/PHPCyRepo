@@ -6,12 +6,10 @@ class AuthController {
 
   public static function loginPost() {
     if (!empty($_POST['username']) && !empty($_POST['password'])) {
-      $q = Flight::db()->prepare('SELECT * FROM users WHERE username=?');
-      $q->execute([$_POST['username']]);
-      $r = $q->fetch();
+      $user = User::get('username', $_POST['username']);
 
-      if ($r && !empty($r['password']) && password_verify($_POST['password'], $r['password'])) {
-        Auth::authenticate($r);
+      if ($user && !empty($user->data['password']) && password_verify($_POST['password'], $user->password)) {
+        Auth::authenticate($user);
         Flight::redirect('/admin');
       } else {
         Flight::view()->set('errors', ['Invalid username or password.']);

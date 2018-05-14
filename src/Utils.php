@@ -59,11 +59,7 @@ class Utils {
   
   public static function generatePackagesFile() {
     $validControlKeys = Utils::getValidControlKeys();
-    
-    $q = Flight::db()->prepare('SELECT * FROM packages WHERE hidden=0;');
-    $q->execute();
-    $rows = $q->fetchAll();
-  
+    $packages = Package::all();
     $cwd = getcwd();
   
     chdir('./repo/');
@@ -72,15 +68,15 @@ class Utils {
     if (file_exists('Packages.gz')) unlink('Packages.gz');
   
     $out = '';
-    foreach ($rows as $row) {
-      foreach ($row as $key => $value) {
+    foreach ($packages as $package) {
+      foreach ($package->data as $key => $value) {
         if (!is_numeric($key) && (in_array($key, $validControlKeys) || $key == 'Depiction')) {
           switch ($key) {
             case 'Filename':
               $out .= $key . ': packages/' . $value . "\n";
               break;
             case 'Depiction':
-              $out .= $key . ': ' . Flight::get('config')['repo']['url'] . 'depiction/' . $row['Package'] . "\n";
+              $out .= $key . ': ' . Flight::get('config')['repo']['url'] . 'depiction/' . $package->Package . "\n";
               break;
             case 'Build-Essential':
             case 'Essential':

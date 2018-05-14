@@ -1,92 +1,72 @@
 <?php
 class PackageController {
-  public static function depiction($package) {
-    $q = Flight::db()->prepare('SELECT * FROM packages WHERE Package=? AND hidden=0');
-    $q->execute([$package]);
-    $r = $q->fetch();
+  public static function depiction($id) {
+    $package = Package::get('Package', $id);
   
-    if (!isset($r['id'])) {
+    if (!$package) {
       Flight::notFound();
       return;
     }
   
-    $q = Flight::db()->prepare('UPDATE packages SET views=views+1 WHERE Package=?');
-    $q->execute([$package]);
-  
-    Flight::render('depiction.php', ['repo' => Flight::get('config')['repo'], 'package' => $r]);
+    $package->views++;
+    $package->save();
+    Flight::render('depiction.php', ['repo' => Flight::get('config')['repo'], 'package' => $package]);
   }
 
-  public static function view($package) {
-    $q = Flight::db()->prepare('SELECT * FROM packages WHERE Package=?');
-    $q->execute([$package]);
-    $r = $q->fetch();
+  public static function view($id) {
+    $package = Package::get('Package', $id);
   
-    if (!isset($r['id'])) {
+    if (!$package) {
       Flight::notFound();
       return;
     }
   
-    Flight::render('package.php', ['repo' => Flight::get('config')['repo'], 'package' => $r]);
+    Flight::render('package.php', ['repo' => Flight::get('config')['repo'], 'package' => $package]);
   }
 
-  public static function updateDepiction($package) {
+  public static function updateDepiction($id) {
     Utils::checkCsrfToken();
+    $package = Package::get('Package', $id);
   
-    $q = Flight::db()->prepare('SELECT * FROM packages WHERE Package=?');
-    $q->execute([$package]);
-    $r = $q->fetch();
-  
-    if (!isset($r['id'])) {
+    if (!$package) {
       Flight::notFound();
       return;
     }
   
-    $q = Flight::db()->prepare('UPDATE packages SET Depiction=? WHERE Package=?');
-    $q->execute([$_POST['depiction'], $package]);
+    $package->Depiction = $_POST['depiction'];
+    $package->save();
   
-    Flight::redirect('/admin/package/' . $package);
+    Flight::redirect('/admin/package/' . $id);
   }
 
-  public static function delete($package) {
+  public static function delete($id) {
     Utils::checkCsrfToken();
-    
-    $q = Flight::db()->prepare('SELECT * FROM packages WHERE Package=?');
-    $q->execute([$package]);
-    $r = $q->fetch();
-
-    if (!isset($r['id'])) {
+    $package = Package::get('Package', $id);
+  
+    if (!$package) {
       Flight::notFound();
       return;
     }
 
-    $q = Flight::db()->prepare('DELETE FROM packages WHERE Package=?');
-    $q->execute([$package]);
-
-    if (file_exists('./repo/packages/' . $r['Filename'])) unlink('./repo/packages/' . $r['Filename']);
-
+    $package->delete();
+    if (file_exists('./repo/packages/' . $package->Filename)) unlink('./repo/packages/' . $package->Filename);
     Utils::generatePackagesFile();
-
     Flight::redirect('/admin');
   }
 
-  public static function updateVisibility($package) {
-    $q = Flight::db()->prepare('SELECT * FROM packages WHERE Package=?');
-    $q->execute([$package]);
-    $r = $q->fetch();
-
-    if (!isset($r['id'])) {
+  public static function updateVisibility($id) {
+    $package = Package::get('Package', $id);
+  
+    if (!$package) {
       Flight::notFound();
       return;
     }
 
-    $hidden = 0;
-    if ($r['hidden'] == 0) $hidden = 1;
-
-    $q = Flight::db()->prepare('UPDATE packages SET hidden=? WHERE Package=?');
-    $q->execute([$hidden, $package]);
+    if ($package->hidden == 0) $package->hidden = 1;
+    else $package->hidden = 0;
+    $package->save();
 
     Utils::generatePackagesFile();
-
     Flight::redirect('/admin/package/' . $package);
   }
 
@@ -146,26 +126,10 @@ class PackageController {
         $data['MD5sum'] = md5_file($_FILES['file']['name']);
         $data['user_id'] = $_SESSION['id'];
 
-        $q = Flight::db()->prepare('SELECT * FROM packages WHERE Package=?');
-        $q->execute([$data['Package']]);
-        $r = $q->fetch();
-
-        if (isset($r['id'])) {
-          if (file_exists('.' . $packages_dir . $r['Filename'])) unlink('.' . $packages_dir . $r['Filename']);
-        }
-
-        $columns = array_reduce(array_keys($data),
-        function ($res, $a) {
-          return (($res == '') ? '' : $res . ', ') . '`' . $a . '`';
-        }, '');
-
-        $values = array_reduce(array_keys($data),
-        function ($res, $a) {
-          return (($res == '') ? '' : $res . ', ')  . '?';
-        }, '');
-        
-        $q = Flight::db()->prepare('REPLACE INTO packages (' . $columns . ') VALUES (' . $values . ')');
-        $q->execute(array_values($data));
+        $package = Package::get('Package', $data['Package']);
+        if ($package) $package->update($data); //TODO: remove old versions, replace them or... ?
+        else $package = Package::create($data);
+        $package->save();
       } else {
         throw new RuntimeException('.deb is corrupted.');
       }
