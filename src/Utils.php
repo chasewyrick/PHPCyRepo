@@ -59,7 +59,7 @@ class Utils {
   
   public static function generatePackagesFile() {
     $validControlKeys = Utils::getValidControlKeys();
-    $packages = Package::all();
+    $packages = Package::all('hidden=0');
     $cwd = getcwd();
   
     chdir('./repo/');
