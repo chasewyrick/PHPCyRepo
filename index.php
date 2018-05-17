@@ -1,6 +1,5 @@
 <?php
 session_start();
-require 'vendor/autoload.php';
 
 spl_autoload_register(function ($class) {
   $try = [
@@ -31,10 +30,9 @@ if (!is_dir('./temp')) {
   mkdir('./temp');
 }
 
-$config = require 'config.php';
-Flight::set('config', $config);
-Flight::register('db', 'PDO', $config['pdo']);
+Framework::$config = require 'config.php';
+Framework::$pdo = new PDO(...Framework::$config['pdo']);
 
 require 'src/routes.php';
 
-Flight::start();
+Framework::do();

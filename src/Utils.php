@@ -2,17 +2,12 @@
 class Utils {
   public static function checkCsrfToken() {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] != Auth::getCsrfToken())
-      Utils::end('The provided CSRF token is incorrect. Please re-authenticate.');
+      Framework::fail(500, 'The provided CSRF token is incorrect. Please re-authenticate.');
   }
 
   public static function requireSuperuser() {
     if (!Auth::isSuperuser())
-      Utils::end('You are not authorized to perform this operation.');
-  }
-
-  public static function end($message) {
-    Flight::error(new Exception($message));
-    die();
+      Framework::fail(403, 'You are not authorized to perform this operation.');
   }
 
   public static function getValidControlKeys() {
@@ -39,14 +34,14 @@ class Utils {
     chdir('./repo/');
     if (file_exists('Release')) unlink('Release');
   
-    $out = 'Origin: ' . Flight::get('config')['repo']['name'] . "\n";
-    $out .= 'Label: ' . Flight::get('config')['repo']['name'] . "\n";
+    $out = 'Origin: ' . Framework::$config['repo']['name'] . "\n";
+    $out .= 'Label: ' . Framework::$config['repo']['name'] . "\n";
     $out .= 'Suite: stable' . "\n";
     $out .= 'Version: 1.0' . "\n";
     $out .= 'Architectures: iphoneos-arm' . "\n";
     $out .= 'Components: main' . "\n";
-    $out .= 'Codename: ' . Flight::get('config')['repo']['codename'] . "\n";
-    $out .= 'Description: ' . Flight::get('config')['repo']['description'] . "\n";
+    $out .= 'Codename: ' . Framework::$config['repo']['codename'] . "\n";
+    $out .= 'Description: ' . Framework::$config['repo']['description'] . "\n";
     $out .= 'MD5Sum:' . "\n";
     $out .= Utils::releaseMD5Sum('Packages');
     $out .= Utils::releaseMD5Sum('Packages.bz2');
@@ -76,7 +71,7 @@ class Utils {
               $out .= $key . ': packages/' . $value . "\n";
               break;
             case 'Depiction':
-              $out .= $key . ': ' . Flight::get('config')['repo']['url'] . 'depiction/' . $package->Package . "\n";
+              $out .= $key . ': ' . Framework::$config['repo']['url'] . 'depiction/' . $package->Package . "\n";
               break;
             case 'Build-Essential':
             case 'Essential':

@@ -1,17 +1,17 @@
 <?php
-Flight::route('/', ['DefaultController', 'index']);
-Flight::route('/depiction/@package', ['PackageController', 'depiction']);
+Router::get('/', ['DefaultController', 'index']);
+Router::get('/depiction/:package', ['PackageController', 'depiction']);
 
 if (Auth::isLoggedIn()) {
-  Flight::route('/admin', ['DefaultController', 'dashboard']);
-  Flight::route('POST /admin/password', ['DefaultController', 'changePassword']);
-  Flight::route('/admin/regen', ['MaintenanceController', 'regeneratePackagesFile']);
-  Flight::route('/admin/package/@package', ['PackageController', 'view']);
-  Flight::route('/admin/package/@package/toggleHidden', ['PackageController', 'updateVisibility']);
-  Flight::route('POST /admin/package/@package/updateDepiction', ['PackageController', 'updateDepiction']);
-  Flight::route('POST /admin/package/@package/delete', ['PackageController', 'delete']);
-  Flight::route('/admin/upload', ['PackageController', 'upload']);
+  Router::get('/admin', ['DefaultController', 'dashboard']);
+  Router::post('/admin/password', ['DefaultController', 'changePassword']);
+  Router::get('/admin/regen', ['MaintenanceController', 'regeneratePackagesFile']);
+  Router::get('/admin/package/:package', ['PackageController', 'view']);
+  Router::get('/admin/package/:package/toggleHidden', ['PackageController', 'updateVisibility']);
+  Router::post('/admin/package/:package/updateDepiction', ['PackageController', 'updateDepiction']);
+  Router::post('/admin/package/:package/delete', ['PackageController', 'delete']);
+  Router::post('/admin/upload', ['PackageController', 'upload']);
 } else {
-  Flight::route('GET /admin', ['AuthController', 'login']);
-  Flight::route('POST /admin', ['AuthController', 'loginPost']);
+  Router::get('/admin', ['AuthController', 'login']);
+  Router::post('/admin', ['AuthController', 'loginPost']);
 }

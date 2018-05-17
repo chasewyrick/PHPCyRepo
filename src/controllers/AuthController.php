@@ -1,7 +1,7 @@
 <?php
 class AuthController {
   public static function login() {
-    Flight::render('login.php', ['repo' => Flight::get('config')['repo']]);
+    Framework::view('login.php', ['repo' => Framework::$config['repo']]);
   }
 
   public static function loginPost() {
@@ -10,13 +10,13 @@ class AuthController {
 
       if ($user && !empty($user->data['password']) && password_verify($_POST['password'], $user->password)) {
         Auth::authenticate($user);
-        Flight::redirect('/admin');
+        Framework::redirect('/admin');
       } else {
-        Flight::view()->set('errors', ['Invalid username or password.']);
+        Framework::viewSet('errors', ['Invalid username or password.']);
       }
     }
     
-    Flight::render('login.php', ['repo' => Flight::get('config')['repo']]);
+    Framework::view('login.php', ['repo' => Framework::$config['repo']]);
   }
 
   public static function logout() {

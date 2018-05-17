@@ -2,72 +2,52 @@
 class PackageController {
   public static function depiction($id) {
     $package = Package::get('Package', $id);
-  
-    if (!$package) {
-      Flight::notFound();
-      return;
-    }
+    if (!$package) Framework::notFound();
   
     $package->views++;
     $package->save();
-    Flight::render('depiction.php', ['repo' => Flight::get('config')['repo'], 'package' => $package]);
+    Framework::view('depiction.php', ['repo' => Framework::$config['repo'], 'package' => $package]);
   }
 
   public static function view($id) {
     $package = Package::get('Package', $id);
+    if (!$package) Framework::notFound();
   
-    if (!$package) {
-      Flight::notFound();
-      return;
-    }
-  
-    Flight::render('package.php', ['repo' => Flight::get('config')['repo'], 'package' => $package]);
+    Framework::view('package.php', ['repo' => Framework::$config['repo'], 'package' => $package]);
   }
 
   public static function updateDepiction($id) {
     Utils::checkCsrfToken();
     $package = Package::get('Package', $id);
-  
-    if (!$package) {
-      Flight::notFound();
-      return;
-    }
+    if (!$package) Framework::notFound();
   
     $package->Depiction = $_POST['depiction'];
     $package->save();
   
-    Flight::redirect('/admin/package/' . $id);
+    Framework::redirect('/admin/package/' . $id);
   }
 
   public static function delete($id) {
     Utils::checkCsrfToken();
     $package = Package::get('Package', $id);
-  
-    if (!$package) {
-      Flight::notFound();
-      return;
-    }
+    if (!$package) Framework::notFound();
 
     $package->delete();
     if (file_exists('./repo/packages/' . $package->Filename)) unlink('./repo/packages/' . $package->Filename);
     Utils::generatePackagesFile();
-    Flight::redirect('/admin');
+    Framework::redirect('/admin');
   }
 
   public static function updateVisibility($id) {
     $package = Package::get('Package', $id);
-  
-    if (!$package) {
-      Flight::notFound();
-      return;
-    }
+    if (!$package) Framework::notFound();
 
     if ($package->hidden == 0) $package->hidden = 1;
     else $package->hidden = 0;
     $package->save();
 
     Utils::generatePackagesFile();
-    Flight::redirect('/admin/package/' . $package);
+    Framework::redirect('/admin/package/' . $package);
   }
 
   public static function upload() {
@@ -151,6 +131,6 @@ class PackageController {
       $file->isDir() ?  rmdir($file) : unlink($file);
     }
 
-    Flight::redirect('/admin');
+    Framework::redirect('/admin');
   }
 }

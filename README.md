@@ -7,8 +7,7 @@ The code is awful and I know it.
 ## Requirements:
 
 * Linux
-* Apache (or nginx, see: http://flightphp.com/install/)
-* composer
+* Apache or nginx
 * tar, ar, bzip2, gzip
 * MySQL
 * PHP 7
@@ -18,6 +17,5 @@ The code is awful and I know it.
 * create a new MySQL database
 * import db.sql
 * edit config.php
-* run: composer install
 * go to /admin
 * username: admin, password: test
