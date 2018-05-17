@@ -6,6 +6,7 @@ spl_autoload_register(function ($class) {
     'src/controllers/%s.php',
     'src/models/%s.php',
     'src/%s.php',
+    'framework/%s.php',
   ];
 
   foreach ($try as $path) {
