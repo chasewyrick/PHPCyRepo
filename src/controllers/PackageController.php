@@ -6,14 +6,17 @@ class PackageController {
   
     $package->views++;
     $package->save();
-    Framework::view('depiction.php', ['repo' => Framework::get('config')['repo'], 'package' => $package]);
+    
+    $view = new View('depiction.php');
+    $view->render(['repo' => Framework::get('config')['repo'], 'package' => $package]);
   }
 
   public static function view($id) {
     $package = Package::get('Package', $id);
     if (!$package) Framework::notFound();
   
-    Framework::view('package.php', ['repo' => Framework::get('config')['repo'], 'package' => $package]);
+    $view = new View('package.php');
+    $view->render(['repo' => Framework::get('config')['repo'], 'package' => $package]);
   }
 
   public static function updateDepiction($id) {

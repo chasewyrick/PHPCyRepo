@@ -1,16 +1,19 @@
 <?php
 class DefaultController {
   public static function index() {
-    Framework::view('index.php', ['repo' => Framework::get('config')['repo']]);
+    $view = new View('index.php');
+    $view->render(['repo' => Framework::get('config')['repo']]);
   }
 
   public static function dashboard() {
+    $view = new View('admin.php');
+
     if (isset($_SESSION['error'])) {
-      Framework::viewSet('errors', [$_SESSION['error']]);
+      $view->errors = [$_SESSION['error']];
       unset($_SESSION['error']);
     }
   
-    Framework::view('admin.php', ['repo' => Framework::get('config')['repo'], 'packages' => Package::all()]);
+    $view->render(['repo' => Framework::get('config')['repo'], 'packages' => Package::all()]);
   }
 
   public static function changePassword() {

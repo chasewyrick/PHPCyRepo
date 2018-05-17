@@ -1,6 +1,5 @@
 <?php
 class Framework {
-  private static $view = [];
   private static $variables = [];
 
   public static $auth = NULL;
@@ -47,21 +46,5 @@ class Framework {
 
   public static function get($key) {
     return self::$variables[$key];
-  }
-
-  public static function viewSet($key, $value) {
-    self::$view[$key] = $value;
-  }
-
-  public static function view($path, $parameters = []) {
-    foreach (self::$view as $key => $value) {
-      ${$key} = $value;
-    }
-
-    foreach ($parameters as $key => $value) {
-      ${$key} = $value;
-    }
-    
-    require 'views/' . $path;
   }
 }
