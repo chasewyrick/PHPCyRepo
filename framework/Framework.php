@@ -13,7 +13,7 @@ class Framework {
     $route = Router::route($method, $path);
 
     if ($route) {
-      call_user_func_array($route['callback'], []);
+      call_user_func_array($route['callback'], $route['parameters']);
     } else {
       self::notFound();
     }
@@ -25,6 +25,8 @@ class Framework {
 
   public static function redirect($path) {
     $base = dirname($_SERVER['SCRIPT_NAME']);
+    header('Location: ' . $base . $path);
+    exit;
   }
 
   public static function fail($code, $message = '') {

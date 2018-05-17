@@ -20,7 +20,10 @@ class Router {
     $path = '/' . $path;
     
     foreach (self::$routes as $route) {
-      if (($route['method'] == $method || $route['method'] == 'ALL') && preg_match($route['regex'], $path) === 1) {
+      $matches = [];
+      if (($route['method'] == $method || $route['method'] == 'ALL') && preg_match($route['regex'], $path, $matches) === 1) {
+        array_shift($matches);
+        $route['parameters'] = $matches;
         return $route;
       }
     }
