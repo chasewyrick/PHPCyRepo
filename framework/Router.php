@@ -31,31 +31,8 @@ class Router {
     return NULL;
   }
 
-  public function all($route, $callback) {
-    $this->handle('ALL', $route, $callback);
-  }
-
-  public function get($route, $callback) {
-    $this->handle('GET', $route, $callback);
-  }
-
-  public function post($route, $callback) {
-    $this->handle('POST', $route, $callback);
-  }
-
-  public function put($route, $callback) {
-    $this->handle('PUT', $route, $callback);
-  }
-
-  public function patch($route, $callback) {
-    $this->handle('PATCH', $route, $callback);
-  }
-
-  public function delete($route, $callback) {
-    $this->handle('DELETE', $route, $callback);
-  }
-
-  public function head($route, $callback) {
-    $this->handle('HEAD', $route, $callback);
+  public function __call($name, $arguments) {
+    if (count($arguments) != 2) throw new Exception('This function requires exactly 2 arguments.');
+    $this->handle(strtoupper($name), $arguments[0], $arguments[1]);
   }
 }
