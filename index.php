@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 spl_autoload_register(function ($class) {
   $try = [
     'src/controllers/%s.php',
@@ -19,6 +17,8 @@ spl_autoload_register(function ($class) {
   return false;
 });
 
+Framework::initialize();
+
 if (!is_dir('./repo')) {
   mkdir('./repo');
 }
@@ -31,8 +31,8 @@ if (!is_dir('./temp')) {
   mkdir('./temp');
 }
 
-Framework::$config = require 'config.php';
-Framework::$pdo = new PDO(...Framework::$config['pdo']);
+Framework::set('config', require 'config.php');
+Framework::set('pdo', new PDO(...Framework::get('config')['pdo']));
 
 require 'src/routes.php';
 

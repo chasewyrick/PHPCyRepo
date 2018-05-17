@@ -1,12 +1,12 @@
 <?php
 class Router {
-  private static $routes = [];
+  private $routes = [];
 
-  private static function handle($method, $route, $callback) {
+  private function handle($method, $route, $callback) {
     $regex = '|^' . preg_replace_callback('/(\/:([.\w]+))/', function ($matches) {
       return '/(.*?)';
     }, $route) . '$|i';
-    self::$routes[] = [
+    $this->routes[] = [
       'method' => $method,
       'route' => $route,
       'regex' => $regex,
@@ -14,12 +14,12 @@ class Router {
     ];
   }
 
-  public static function route($method, $path) {
+  public function route($method, $path) {
     $path = trim($path, " \t\n\r\0\x0B\\\/");
     $path = str_replace("\\", '/', $path);
     $path = '/' . $path;
     
-    foreach (self::$routes as $route) {
+    foreach ($this->routes as $route) {
       $matches = [];
       if (($route['method'] == $method || $route['method'] == 'ALL') && preg_match($route['regex'], $path, $matches) === 1) {
         array_shift($matches);
@@ -31,31 +31,31 @@ class Router {
     return NULL;
   }
 
-  public static function all($route, $callback) {
-    self::handle('ALL', $route, $callback);
+  public function all($route, $callback) {
+    $this->handle('ALL', $route, $callback);
   }
 
-  public static function get($route, $callback) {
-    self::handle('GET', $route, $callback);
+  public function get($route, $callback) {
+    $this->handle('GET', $route, $callback);
   }
 
-  public static function post($route, $callback) {
-    self::handle('POST', $route, $callback);
+  public function post($route, $callback) {
+    $this->handle('POST', $route, $callback);
   }
 
-  public static function put($route, $callback) {
-    self::handle('PUT', $route, $callback);
+  public function put($route, $callback) {
+    $this->handle('PUT', $route, $callback);
   }
 
-  public static function patch($route, $callback) {
-    self::handle('PATCH', $route, $callback);
+  public function patch($route, $callback) {
+    $this->handle('PATCH', $route, $callback);
   }
 
-  public static function delete($route, $callback) {
-    self::handle('DELETE', $route, $callback);
+  public function delete($route, $callback) {
+    $this->handle('DELETE', $route, $callback);
   }
 
-  public static function head($route, $callback) {
-    self::handle('HEAD', $route, $callback);
+  public function head($route, $callback) {
+    $this->handle('HEAD', $route, $callback);
   }
 }

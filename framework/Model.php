@@ -7,7 +7,7 @@ abstract class Model {
   }
 
   public static function get($field, $value) {
-    $q = Framework::$pdo->prepare('SELECT * FROM ' . static::$table . ' WHERE ' . $field . '=?');
+    $q = Framework::get('pdo')->prepare('SELECT * FROM ' . static::$table . ' WHERE ' . $field . '=?');
     $q->execute([$value]);
     $r = $q->fetch();
     if ($r && is_array($r)) {
@@ -19,7 +19,7 @@ abstract class Model {
 
   public static function all($where = NULL, $values = []) {
     $queryWhere = ($where) ? ' WHERE ' . $where : '';
-    $q = Framework::$pdo->prepare('SELECT * FROM ' . static::$table . $queryWhere . ';');
+    $q = Framework::get('pdo')->prepare('SELECT * FROM ' . static::$table . $queryWhere . ';');
     $q->execute($values);
     $rows = $q->fetchAll();
     return array_map(function ($row) {

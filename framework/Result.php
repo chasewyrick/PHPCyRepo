@@ -31,7 +31,7 @@ class Result {
         return (($res == '') ? '' : $res . ', ') . '`' . $a . '`=?';
       }, '');
 
-      $q = Framework::$pdo->prepare('UPDATE ' . $this->table . ' SET ' . $columns . ' WHERE id=?');
+      $q = Framework::get('pdo')->prepare('UPDATE ' . $this->table . ' SET ' . $columns . ' WHERE id=?');
       $values = array_values($changes);
       $values[] = $this->orig['id'];
       $q->execute($values);
@@ -46,10 +46,10 @@ class Result {
         return (($res == '') ? '' : $res . ', ')  . '?';
       }, '');
 
-      $q = Framework::$pdo->prepare('INSERT INTO ' . $this->table . ' (' . $columns . ') VALUES (' . $values . ')');
+      $q = Framework::get('pdo')->prepare('INSERT INTO ' . $this->table . ' (' . $columns . ') VALUES (' . $values . ')');
       $q->execute(array_values($data));
 
-      $this->data['id'] = Framework::$pdo->lastInsertId();
+      $this->data['id'] = Framework::get('pdo')->lastInsertId();
     }
   }
 
@@ -61,7 +61,7 @@ class Result {
 
   public function delete() {
     if (array_key_exists("id", $this->orig)) {
-      $q = Framework::$pdo->prepare('DELETE FROM ' . $this->table . ' WHERE id=?');
+      $q = Framework::get('pdo')->prepare('DELETE FROM ' . $this->table . ' WHERE id=?');
       $q->execute([$this->orig['id']]);
     }
   }

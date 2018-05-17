@@ -1,17 +1,17 @@
 <?php
-Router::get('/', ['DefaultController', 'index']);
-Router::get('/depiction/:package', ['PackageController', 'depiction']);
+Framework::$router->get('/', ['DefaultController', 'index']);
+Framework::$router->get('/depiction/:package', ['PackageController', 'depiction']);
 
-if (Auth::isLoggedIn()) {
-  Router::get('/admin', ['DefaultController', 'dashboard']);
-  Router::post('/admin/password', ['DefaultController', 'changePassword']);
-  Router::get('/admin/regen', ['MaintenanceController', 'regeneratePackagesFile']);
-  Router::get('/admin/package/:package', ['PackageController', 'view']);
-  Router::get('/admin/package/:package/toggleHidden', ['PackageController', 'updateVisibility']);
-  Router::post('/admin/package/:package/updateDepiction', ['PackageController', 'updateDepiction']);
-  Router::post('/admin/package/:package/delete', ['PackageController', 'delete']);
-  Router::post('/admin/upload', ['PackageController', 'upload']);
+if (Framework::$auth->isLoggedIn()) {
+  Framework::$router->get('/admin', ['DefaultController', 'dashboard']);
+  Framework::$router->post('/admin/password', ['DefaultController', 'changePassword']);
+  Framework::$router->get('/admin/regen', ['MaintenanceController', 'regeneratePackagesFile']);
+  Framework::$router->get('/admin/package/:package', ['PackageController', 'view']);
+  Framework::$router->get('/admin/package/:package/toggleHidden', ['PackageController', 'updateVisibility']);
+  Framework::$router->post('/admin/package/:package/updateDepiction', ['PackageController', 'updateDepiction']);
+  Framework::$router->post('/admin/package/:package/delete', ['PackageController', 'delete']);
+  Framework::$router->post('/admin/upload', ['PackageController', 'upload']);
 } else {
-  Router::get('/admin', ['AuthController', 'login']);
-  Router::post('/admin', ['AuthController', 'loginPost']);
+  Framework::$router->get('/admin', ['AuthController', 'login']);
+  Framework::$router->post('/admin', ['AuthController', 'loginPost']);
 }

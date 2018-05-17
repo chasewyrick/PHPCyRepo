@@ -1,12 +1,12 @@
 <?php
 class Utils {
   public static function checkCsrfToken() {
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] != Auth::getCsrfToken())
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] != Framework::$auth->getCsrfToken())
       Framework::fail(500, 'The provided CSRF token is incorrect. Please re-authenticate.');
   }
 
   public static function requireSuperuser() {
-    if (!Auth::isSuperuser())
+    if (!Framework::$auth->isSuperuser())
       Framework::fail(403, 'You are not authorized to perform this operation.');
   }
 
@@ -34,14 +34,14 @@ class Utils {
     chdir('./repo/');
     if (file_exists('Release')) unlink('Release');
   
-    $out = 'Origin: ' . Framework::$config['repo']['name'] . "\n";
-    $out .= 'Label: ' . Framework::$config['repo']['name'] . "\n";
+    $out = 'Origin: ' . Framework::get('config')['repo']['name'] . "\n";
+    $out .= 'Label: ' . Framework::get('config')['repo']['name'] . "\n";
     $out .= 'Suite: stable' . "\n";
     $out .= 'Version: 1.0' . "\n";
     $out .= 'Architectures: iphoneos-arm' . "\n";
     $out .= 'Components: main' . "\n";
-    $out .= 'Codename: ' . Framework::$config['repo']['codename'] . "\n";
-    $out .= 'Description: ' . Framework::$config['repo']['description'] . "\n";
+    $out .= 'Codename: ' . Framework::get('config')['repo']['codename'] . "\n";
+    $out .= 'Description: ' . Framework::get('config')['repo']['description'] . "\n";
     $out .= 'MD5Sum:' . "\n";
     $out .= Utils::releaseMD5Sum('Packages');
     $out .= Utils::releaseMD5Sum('Packages.bz2');
@@ -71,7 +71,7 @@ class Utils {
               $out .= $key . ': packages/' . $value . "\n";
               break;
             case 'Depiction':
-              $out .= $key . ': ' . Framework::$config['repo']['url'] . 'depiction/' . $package->Package . "\n";
+              $out .= $key . ': ' . Framework::get('config')['repo']['url'] . 'depiction/' . $package->Package . "\n";
               break;
             case 'Build-Essential':
             case 'Essential':
