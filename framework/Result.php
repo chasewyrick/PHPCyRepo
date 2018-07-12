@@ -47,7 +47,7 @@ class Result {
       }, '');
 
       $q = Framework::get('pdo')->prepare('INSERT INTO ' . $this->table . ' (' . $columns . ') VALUES (' . $values . ')');
-      $q->execute(array_values($data));
+      $q->execute(array_values($this->data));
 
       $this->data['id'] = Framework::get('pdo')->lastInsertId();
     }

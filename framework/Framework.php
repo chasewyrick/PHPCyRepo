@@ -14,7 +14,7 @@ class Framework {
     $base = dirname($_SERVER['SCRIPT_NAME']);
     $path = substr($_SERVER['REQUEST_URI'], strlen($base));
     $method = $_SERVER['REQUEST_METHOD'];
-
+    
     $route = self::$router->route($method, $path);
 
     if ($route) {
@@ -30,7 +30,7 @@ class Framework {
 
   public static function redirect($path) {
     $base = dirname($_SERVER['SCRIPT_NAME']);
-    header('Location: ' . $base . $path);
+    header('Location: ' . self::$variables['config']['repo']['url'] . $base . $path);
     exit;
   }
 

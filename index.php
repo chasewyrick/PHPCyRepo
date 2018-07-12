@@ -8,8 +8,9 @@ spl_autoload_register(function ($class) {
   ];
 
   foreach ($try as $path) {
-    if (file_exists(sprintf($path, $class))) {
-      include sprintf($path, $class);
+    $s = sprintf($path, $class);
+    if (file_exists($s)) {
+      require $s;
       return;
     }
   }
